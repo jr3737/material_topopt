@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "material_topopt"
+version = "0.0.1"
+authors = [
+  { name="Jonathan Russ", email="jr8736@princeton.edu" },
+]
+description = "A package for simple material topology optimization."
+readme = {file = "README.md", content-type = "text/markdown"}
+license = {file = "LICENSE"}
+requires-python = ">=3.8"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: CPython"
+]
+keywords = ["multiscale", "topology optimization", "design optimization"]
+dependencies = ["numpy", "scipy", "pandas", "matplotlib", "pytest", "pytest-cov", "netCDF4", "meshio", "pypardiso", "sphinx"]
+
+[project.urls]
+repository = "https://github.com/jr3737/material_topopt.git"
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "src/material_topopt"]
+addopts = [
+    "--import-mode=importlib",
+    "-v", "-s", "--cov=src/material_topopt", "--cov-report=html", "--cov-config=.coveragerc", 
+]
+python_files = ["test_*.py", "*_test.py", "tests.py"]
+pythonpath = ["./"]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]

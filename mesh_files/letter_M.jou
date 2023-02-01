@@ -1,0 +1,38 @@
+reset
+
+#{h=1.0}
+#{w=0.25}
+#{c=2.25}
+#{d=0.8}
+
+create vertex 0 0 0
+create vertex 0 {h/2} 0
+create vertex 0 {h} 0 
+create vertex {w} {h} 0 
+create vertex {c*w} {h-d*w} 0 
+create vertex {c*w} {h-d*w-w} 0 
+create vertex {w} {h-w} 0 
+create vertex {w} 0 0
+
+create curve spline vertex 6 7 8 1 2 3 4 5
+create curve vertex 5 6
+
+create surface curve all
+
+Surface 1  copy reflect origin 0.562500, 0.550000, 0.000000  direction 1,0,0  
+merge vol all
+
+surface 1 2  size auto factor 3
+set trimesher geometry sizing off
+surface 1 2 scheme trimesh
+mesh surface 1 2
+
+block 1 surf 1 2
+block 1 element type TRI
+
+nodeset 1 curve 2
+nodeset 1 name "NS1"
+nodeset 2 node in curve 1 with y_coord < 0.0
+nodeset 2 name "NS2"
+nodeset 3 node in curve 4 with y_coord < 0.0
+nodeset 3 name "NS3"

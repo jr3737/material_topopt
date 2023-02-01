@@ -1,0 +1,10 @@
+graft src
+
+prune .github
+prune docs
+prune tests
+
+include LICENSE
+include README.md
+
+global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store
