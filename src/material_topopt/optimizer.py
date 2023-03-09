@@ -256,8 +256,8 @@ class MaterialOptimizer:
                 scaled_constraint_gradient, current_objective_scale_factor = \
                 self.__get_function_values_and_gradients(xval, iteration_number,
                                                                 objective_scale_factor=current_objective_scale_factor)
-            message = (f"Iteration {iteration_number:4d} , Objective {unscaled_objective_value:11.4e} , Constraint"
-              f" {scaled_constraint_value:11.4e} <= 0 , Objective Scale Factor {current_objective_scale_factor:11.4e}")
+            message = (f"Iteration {iteration_number:4d}, Objective {unscaled_objective_value:11.4e}, Constraint"
+              f" {scaled_constraint_value:11.4e} <= 0, Objective Scale Factor {current_objective_scale_factor:11.4e}")
             self.logger.info(message)
 
             # The MMA subproblem is solved at the current design variable values, xval:

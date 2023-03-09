@@ -94,7 +94,9 @@ def rve_and_macroscale_parameter_dictionaries(macroscale_mesh_filepath, temporar
             "smooth Heaviside projection continuation function": smooth_heaviside_projection_continuation_function,
             "design variable initialization function": design_variable_initialization_function,
             "density filter radius": 2.0/10.0,
-            "output directory path": output_directory_path
+            "output directory path": output_directory_path,
+            "enable vtk output": False,
+            "enable matplotlib output": False
         }
 
     fixed_boundary_nodesets = {"Fixed X Displacement Nodesets": ["LeftBoundaryNodeset"],

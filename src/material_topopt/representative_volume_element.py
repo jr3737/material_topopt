@@ -12,6 +12,7 @@ import numpy as np
 import scipy as sp
 from scipy.spatial import Delaunay
 import meshio
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 import src.material_topopt.utilities as utils
@@ -54,6 +55,7 @@ class RepresentativeVolumeElement2D:
         self.__set_user_parameters(representative_volume_element_parameters)
         self.__space_dimension = 2
         self.__simp_exponent = 3.0
+        self.__matplotlib_triangulation = None
 
         self.__create_representative_volume_element_triangle_mesh(
             number_of_elements_along_each_edge=self.__number_of_elements_along_each_edge)
@@ -125,6 +127,12 @@ class RepresentativeVolumeElement2D:
         self.__output_directory_path = utils.get_parameter_or_default(
             representative_volume_element_parameters, "output directory path", str, required=False,
             default_value=os.path.join(os.getcwd(), "output"))
+        self.__enable_vtk_output = utils.get_parameter_or_default(
+            representative_volume_element_parameters, "enable vtk output", bool, required=False,
+            default_value=True)
+        self.__enable_matplotlib_output = utils.get_parameter_or_default(
+            representative_volume_element_parameters, "enable matplotlib output", bool, required=False,
+            default_value=True)
         if not os.path.exists(self.__output_directory_path):
             os.mkdir(self.__output_directory_path)
 
@@ -217,28 +225,6 @@ class RepresentativeVolumeElement2D:
             np.argwhere(bottom_face_node_mask &   ~left_face_node_mask & ~right_face_node_mask).ravel()
         top_face_node_indices    = \
             np.argwhere(   top_face_node_mask &   ~left_face_node_mask & ~right_face_node_mask).ravel()
-
-        # if not np.allclose(y_coordinates[left_face_node_indices],
-        #                    y_coordinates[right_face_node_indices], atol=geometric_tolerance):
-        #     sorted_left_indices_ascending = np.argsort(y_coordinates[left_face_node_indices])
-        #     left_face_node_indices = left_face_node_indices[sorted_left_indices_ascending]
-
-        #     sorted_right_indices_ascending = np.argsort(y_coordinates[right_face_node_indices])
-        #     right_face_node_indices = right_face_node_indices[sorted_right_indices_ascending]
-
-        #     assert np.allclose(y_coordinates[left_face_node_indices],
-        #                        y_coordinates[right_face_node_indices], atol=geometric_tolerance)
-
-        # if not np.allclose(x_coordinates[bottom_face_node_indices],
-        #                    x_coordinates[top_face_node_indices], atol=geometric_tolerance):
-        #     sorted_bottom_indices_ascending = np.argsort(x_coordinates[bottom_face_node_indices])
-        #     bottom_face_node_indices = bottom_face_node_indices[sorted_bottom_indices_ascending]
-
-        #     sorted_top_indices_ascending = np.argsort(x_coordinates[top_face_node_indices])
-        #     top_face_node_indices = top_face_node_indices[sorted_top_indices_ascending]
-
-        #     assert np.allclose(x_coordinates[bottom_face_node_indices],
-        #                        x_coordinates[top_face_node_indices], atol=geometric_tolerance)
 
         all_interior_nodes_mask = \
             ~(left_face_node_mask | right_face_node_mask | bottom_face_node_mask | top_face_node_mask)
@@ -458,21 +444,68 @@ class RepresentativeVolumeElement2D:
         self.__H12_nodewise = H12_uncondensed.reshape(new_shape)
 
         # VTK Output
-        points_3dim = np.zeros((self.__number_of_nodes, 3))
-        points_3dim[:, :2] = self.__nodal_coordinates
-        H11_3dim = np.zeros((self.__number_of_nodes, 3))
-        H11_3dim[:, :2] = self.__H11_nodewise
-        H22_3dim = np.zeros((self.__number_of_nodes, 3))
-        H22_3dim[:, :2] = self.__H22_nodewise
-        H12_3dim = np.zeros((self.__number_of_nodes, 3))
-        H12_3dim[:, :2] = self.__H12_nodewise
-        point_data = {"H11": H11_3dim, "H22": H22_3dim, "H12": H12_3dim, "NodalDensity": self.filtered_nodal_densities}
-        cell_data = {"ElementDensity": [density_variables_elementwise]}
-        cell_blocks = [meshio.CellBlock('triangle', self.__element_connectivity)]
-        my_mesh = meshio.Mesh(points_3dim, cell_blocks, point_data=point_data, cell_data=cell_data)
-        rve_output_filepath = os.path.join(self.__output_directory_path,
-                                           f"rve.{self.__optimization_iteration_number:04d}.vtk")
-        my_mesh.write(rve_output_filepath)
+        if self.__enable_vtk_output:
+            points_3dim = np.zeros((self.__number_of_nodes, 3))
+            points_3dim[:, :2] = self.__nodal_coordinates
+            H11_3dim = np.zeros((self.__number_of_nodes, 3))
+            H11_3dim[:, :2] = self.__H11_nodewise
+            H22_3dim = np.zeros((self.__number_of_nodes, 3))
+            H22_3dim[:, :2] = self.__H22_nodewise
+            H12_3dim = np.zeros((self.__number_of_nodes, 3))
+            H12_3dim[:, :2] = self.__H12_nodewise
+            point_data = {"H11": H11_3dim, "H22": H22_3dim, "H12": H12_3dim, "Density": self.filtered_nodal_densities}
+            cell_data = None #{"ElementDensity": [density_variables_elementwise]}
+            cell_blocks = [meshio.CellBlock('triangle', self.__element_connectivity)]
+            my_mesh = meshio.Mesh(points_3dim, cell_blocks, point_data=point_data, cell_data=cell_data)
+            rve_output_filepath = os.path.join(self.__output_directory_path,
+                                               f"rve.{self.__optimization_iteration_number:04d}.vtk")
+            my_mesh.write(rve_output_filepath)
+
+        # matplotlib density plot
+        if self.__enable_matplotlib_output:
+            self.logger.debug("Matplotlib density contour plot output")
+            number_of_repeated_RVEs_in_each_direction = 4
+            number_of_repeated_RVEs = number_of_repeated_RVEs_in_each_direction**2
+            if self.__matplotlib_triangulation is None:
+                x_coords = []
+                y_coords = []
+                elem_connect = []
+                node_inc = 0
+                x_add = 0.0
+                y_add = 0.0
+                for row in range(number_of_repeated_RVEs_in_each_direction):
+                    x_add = 0.0
+                    for col in range(number_of_repeated_RVEs_in_each_direction):
+                        new_x = self.__nodal_coordinates[:, 0] + x_add
+                        new_y = self.__nodal_coordinates[:, 1] + y_add
+                        elem_connect.append(self.__element_connectivity + node_inc)
+                        x_coords.append(new_x.ravel())
+                        y_coords.append(new_y.ravel())
+                        node_inc += self.__number_of_nodes
+                        x_add += 1.0
+                    y_add += 1.0
+                self.__matplotlib_triangulation = mpl.tri.Triangulation(np.concatenate(x_coords),
+                                                                        np.concatenate(y_coords),
+                                                                        triangles=np.concatenate(elem_connect, axis=0))
+            matplotlib_figure_output_filepath = os.path.join(self.__output_directory_path,
+                                                             f"rveDensity.{self.__optimization_iteration_number:04d}.png")
+            fig = plt.figure()
+            ax = fig.add_subplot(1, 1, 1)
+            number_of_contour_levels = 32
+            levels = np.linspace(0.0, 1.0, number_of_contour_levels, endpoint=True)
+            density_contour_plot = ax.tricontourf(self.__matplotlib_triangulation,
+                                                  np.tile(self.filtered_nodal_densities, number_of_repeated_RVEs),
+                                                  levels,
+                                                  cmap="coolwarm")
+            ax.axis('equal')
+            ax.axis('off')
+            density_contour_plot.set_clim([0, 1])
+            color_bar = fig.colorbar(density_contour_plot, ticks=[0.0, 1.0], label=r"Density, $\rho$", format="%0.1f",
+                                     extend='neither', extendfrac=0.0, norm=mpl.colors.Normalize(vmin=0.0, vmax=1.0))
+            fig.tight_layout()
+            fig.savefig(matplotlib_figure_output_filepath, dpi=300.0)
+            plt.close(fig)
+        
 
 
     ###################################################################################################################

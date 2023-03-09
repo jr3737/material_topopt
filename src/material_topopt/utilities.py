@@ -37,8 +37,8 @@ def setup_logging(logging_level: int, logfile_path: str = ""):
     logger.setLevel(logging_level)
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging_level)
-    first_line = "Logged Columns: Time (Hour:Minute:Second) , Logger Name , Logging Level , Message"
-    formatter = logging.Formatter('%(asctime)s , %(name)s , %(levelname)s , %(message)s', datefmt='%H:%M:%S')
+    first_line = "Logged Columns: Time (Hour:Minute:Second), Logger Name, Logging Level, Message"
+    formatter = logging.Formatter('%(asctime)s, %(name)s, %(levelname)s, %(message)s', datefmt='%H:%M:%S')
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     logger.info(first_line)

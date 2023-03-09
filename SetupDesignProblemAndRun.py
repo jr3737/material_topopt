@@ -1,4 +1,4 @@
-"""The main file for problem setup and running.
+"""The main file for problem setup and execution.
 
 User parameters are specified for the macroscale problem, the representative
 volume element problem, and for the optimizer. Subsequently, the optimization
@@ -114,12 +114,14 @@ representative_volume_element_parameters = \
         "number of elements along each edge": number_of_elements_along_each_edge,
         "stiff material elastic modulus": 1.0e3,
         "soft material elastic modulus": 1.0,
-        "poissons ratio": 0.33,
+        "poissons ratio": 0.3,
         "SIMP exponent continuation function": simp_exponent_continuation_function,
         "smooth Heaviside projection continuation function": smooth_heaviside_projection_continuation_function,
         "design variable initialization function": design_variable_initialization_function,
         "density filter radius": float(filter_radius_number_of_elements) / float(number_of_elements_along_each_edge),
-        "output directory path": output_directory_path
+        "output directory path": output_directory_path,
+        "enable vtk output": True,
+        "enable matplotlib output": True
     }
 
 # Paperclip
