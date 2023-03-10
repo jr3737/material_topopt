@@ -176,7 +176,7 @@ class PeriodicDensityFilter:
 
         # Apply periodic boundary conditions
         filter_matrix_condensed = \
-            ( self.__all_to_free_matrix_map @ (filter_matrix_uncondensed @ self.__free_to_all_matrix_map) )
+            self.__all_to_free_matrix_map @ (filter_matrix_uncondensed @ self.__free_to_all_matrix_map)
         filter_matrix_condensed_csc = filter_matrix_condensed.tocsc()
         self.__factored_matrix_solve = utils.factorized(filter_matrix_condensed_csc)
 

@@ -225,7 +225,7 @@ class MaterialOptimizer:
             restart_filename = os.path.join(self.__optimization_restart_file_directory,
                                             f"mma_restart_iteration_{self.__restart_iteration_number:04d}.npz")
             if not os.path.exists(restart_filename):
-                raise Exception(f"The restart file '{restart_filename}' does not exist!")
+                raise IOError(f"The restart file '{restart_filename}' does not exist!")
             data = np.load(restart_filename)
             iteration_number = self.__restart_iteration_number
             xval = data['xval']

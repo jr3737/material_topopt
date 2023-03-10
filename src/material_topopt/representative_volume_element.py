@@ -73,17 +73,17 @@ class RepresentativeVolumeElement2D:
 
         maximum_heaviside_projection_parameter = \
             (2.0 * self.__density_filter_radius) / ((3.0**0.5) * self.__element_size)
-        pde_filter_parameters = dict(element_areas=self.__element_areas,
-                                     shape_function_gradients=self.__shape_function_gradients,
-                                     shape_function_values=self.__shape_function_values,
-                                     filter_radius=self.__density_filter_radius,
-                                     element_connectivity=self.__element_connectivity,
-                                     nodal_coordinates=self.__nodal_coordinates,
-                                     interior_node_indices=self.__interior_node_indices,
-                                     free_boundary_node_indices=self.__face_node_pairs[:, 0].ravel(),
-                                     forced_boundary_node_indices=self.__face_node_pairs[:, 1].ravel(),
-                                     bottom_left_corner_node_index=self.__bottom_left_node_index,
-                                     forced_corner_node_indices=self.__forced_corner_node_indices)
+        pde_filter_parameters = {"element_areas": self.__element_areas,
+                                 "shape_function_gradients": self.__shape_function_gradients,
+                                 "shape_function_values": self.__shape_function_values,
+                                 "filter_radius": self.__density_filter_radius,
+                                 "element_connectivity": self.__element_connectivity,
+                                 "nodal_coordinates": self.__nodal_coordinates,
+                                 "interior_node_indices": self.__interior_node_indices,
+                                 "free_boundary_node_indices": self.__face_node_pairs[:, 0].ravel(),
+                                 "forced_boundary_node_indices": self.__face_node_pairs[:, 1].ravel(),
+                                 "bottom_left_corner_node_index": self.__bottom_left_node_index,
+                                 "forced_corner_node_indices": self.__forced_corner_node_indices}
         self.periodic_density_filter = PeriodicDensityFilter(pde_filter_parameters,
                                                              self.__smooth_heaviside_projection_continuation_function,
                                                              maximum_heaviside_projection_parameter)

@@ -152,7 +152,7 @@ def mmasub(m,n,iteration_number,xval,xmin,xmax,xold1,xold2,df0dx,fval,dfdx,low,u
     Q = Q+PQ
     P = (diags(ux2.flatten(),0).dot(P.T)).T
     Q = (diags(xl2.flatten(),0).dot(Q.T)).T
-    b = (np.dot(P,uxinv)+np.dot(Q,xlinv)-fval)
+    b = np.dot(P,uxinv)+np.dot(Q,xlinv)-fval
     # Solving the subproblem by a primal-dual Newton method
     xmma,ymma,zmma,lam,xsi,eta,mu,zet,s = subsolv(m,n,epsimin,low,upp,alfa,beta,p0,q0,P,Q,a0,a,b,c,d)
     # Return values
