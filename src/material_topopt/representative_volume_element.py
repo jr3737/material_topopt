@@ -487,8 +487,8 @@ class RepresentativeVolumeElement2D:
                 self.__matplotlib_triangulation = mpl.tri.Triangulation(np.concatenate(x_coords),
                                                                         np.concatenate(y_coords),
                                                                         triangles=np.concatenate(elem_connect, axis=0))
-            matplotlib_figure_output_filepath = os.path.join(self.__output_directory_path,
-                                                             f"rveDensity.{self.__optimization_iteration_number:04d}.png")
+            matplotlib_figure_output_filepath = \
+                os.path.join(self.__output_directory_path, f"material.{self.__optimization_iteration_number:04d}.png")
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
             number_of_contour_levels = 32
@@ -500,12 +500,14 @@ class RepresentativeVolumeElement2D:
             ax.axis('equal')
             ax.axis('off')
             density_contour_plot.set_clim([0, 1])
-            color_bar = fig.colorbar(density_contour_plot, ticks=[0.0, 1.0], label=r"Density, $\rho$", format="%0.1f",
+            color_bar = fig.colorbar(density_contour_plot, ticks=[0.0, 1.0], format="%0.1f",
                                      extend='neither', extendfrac=0.0, norm=mpl.colors.Normalize(vmin=0.0, vmax=1.0))
+            color_bar.set_label(label=r"Density, $\rho$", size=18, weight="bold")
+            color_bar.ax.tick_params(labelsize=16)
             fig.tight_layout()
             fig.savefig(matplotlib_figure_output_filepath, dpi=300.0)
             plt.close(fig)
-        
+
 
 
     ###################################################################################################################
