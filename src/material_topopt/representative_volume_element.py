@@ -502,7 +502,7 @@ class RepresentativeVolumeElement2D:
             density_contour_plot.set_clim([0, 1])
             color_bar = fig.colorbar(density_contour_plot, ticks=[0.0, 1.0], format="%0.1f",
                                      extend='neither', extendfrac=0.0, norm=mpl.colors.Normalize(vmin=0.0, vmax=1.0))
-            color_bar.set_label(label=r"Density, $\rho$", size=18, weight="bold")
+            color_bar.set_label(label=r"Density, $\rho$", size=18)
             color_bar.ax.tick_params(labelsize=16)
             fig.tight_layout()
             fig.savefig(matplotlib_figure_output_filepath, dpi=300.0)
