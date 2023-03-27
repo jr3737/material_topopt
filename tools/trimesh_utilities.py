@@ -71,6 +71,9 @@ def write_the_mesh_to_file(mesh_filename: str,
                            nodesets: Dict[str, np.ndarray]):
     number_of_nodes = nodal_coordinates.shape[0]
     number_of_elements = element_connectivity.shape[0]
+    for nodeset_name, nodeset_array in nodesets.items():
+        if nodeset_array.ndim > 1:
+            nodesets[nodeset_name] = nodeset_array.flatten()
     cell_block = meshio.CellBlock('triangle', element_connectivity)
     meshio_object = meshio.Mesh(nodal_coordinates, [cell_block], point_sets=nodesets)
     meshio_object.write(mesh_filename)

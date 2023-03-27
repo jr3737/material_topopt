@@ -107,8 +107,9 @@ class MacroscaleProblem2D:
             macroscale_problem_parameters, "output directory path", str, required=False,
             default_value=os.path.join(os.getcwd(), "output")
             )
-        if not os.path.exists(self.__output_directory_path):
-            os.mkdir(self.__output_directory_path)
+        self.__macroscale_vtk_file_output = os.path.join(self.__output_directory_path, "macroscale_VTK_files")
+        if not os.path.exists(self.__macroscale_vtk_file_output):
+            os.mkdir(self.__macroscale_vtk_file_output)
 
 
     ###################################################################################################################
@@ -360,7 +361,7 @@ class MacroscaleProblem2D:
             point_data.update(additional_point_data)
         cell_blocks = [meshio.CellBlock('triangle', self.element_connectivity)]
         my_mesh = meshio.Mesh(points_3dim, cell_blocks, point_data=point_data)
-        macroscale_output_filepath = os.path.join(self.__output_directory_path,
+        macroscale_output_filepath = os.path.join(self.__macroscale_vtk_file_output,
                                                   f"macroscale.{optimization_iteration_number:04d}.vtk")
         my_mesh.write(macroscale_output_filepath)
 

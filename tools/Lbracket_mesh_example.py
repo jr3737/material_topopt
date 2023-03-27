@@ -1,6 +1,4 @@
 '''Script to create a simple 3-node triangle mesh of a general polygon.
-conda install -c conda-forge trimesh shapely
-pip install triangle
 '''
 import numpy as np
 import trimesh_utilities
@@ -24,8 +22,8 @@ nodal_y_coordinates = nodal_coordinates[:, 1].ravel()
 geometric_tolerance = average_finite_element_size / 100.0
 
 # Create the index sets of nodes to specify boundary conditions later
-indices_of_nodes_on_the_top_edge   = np.argwhere(np.abs(nodal_y_coordinates - L) < geometric_tolerance).ravel()
-indices_of_nodes_on_the_right_edge = np.argwhere(np.abs(nodal_x_coordinates - L) < geometric_tolerance).ravel()
+indices_of_nodes_on_the_top_edge   = np.argwhere(np.abs(nodal_y_coordinates - L) < geometric_tolerance)
+indices_of_nodes_on_the_right_edge = np.argwhere(np.abs(nodal_x_coordinates - L) < geometric_tolerance)
 
 # nodesets is a dictionary which maps the nodeset name as a string to a numpy array
 #   of integers representing the indices of the nodes in the nodeset

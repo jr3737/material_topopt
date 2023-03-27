@@ -133,8 +133,14 @@ class RepresentativeVolumeElement2D:
         self.__enable_matplotlib_output = utils.get_parameter_or_default(
             representative_volume_element_parameters, "enable matplotlib output", bool, required=False,
             default_value=True)
-        if not os.path.exists(self.__output_directory_path):
-            os.mkdir(self.__output_directory_path)
+        
+        self.__rve_vtk_file_output = os.path.join(self.__output_directory_path, "material_VTK_files")
+        if not os.path.exists(self.__rve_vtk_file_output):
+            os.mkdir(self.__rve_vtk_file_output)
+        
+        self.__rve_matplotlib_file_output = os.path.join(self.__output_directory_path, "material_image_files")
+        if not os.path.exists(self.__rve_matplotlib_file_output):
+            os.mkdir(self.__rve_matplotlib_file_output)
 
         key = "SIMP exponent continuation function"
         self.__simp_exponent_continuation_function = \
@@ -457,7 +463,7 @@ class RepresentativeVolumeElement2D:
             cell_data = None #{"ElementDensity": [density_variables_elementwise]}
             cell_blocks = [meshio.CellBlock('triangle', self.__element_connectivity)]
             my_mesh = meshio.Mesh(points_3dim, cell_blocks, point_data=point_data, cell_data=cell_data)
-            rve_output_filepath = os.path.join(self.__output_directory_path,
+            rve_output_filepath = os.path.join(self.__rve_vtk_file_output,
                                                f"rve.{self.__optimization_iteration_number:04d}.vtk")
             my_mesh.write(rve_output_filepath)
 
@@ -488,7 +494,7 @@ class RepresentativeVolumeElement2D:
                                                                         np.concatenate(y_coords),
                                                                         triangles=np.concatenate(elem_connect, axis=0))
             matplotlib_figure_output_filepath = \
-                os.path.join(self.__output_directory_path, f"material.{self.__optimization_iteration_number:04d}.png")
+                os.path.join(self.__rve_matplotlib_file_output, f"material.{self.__optimization_iteration_number:04d}.png")
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
             number_of_contour_levels = 32
