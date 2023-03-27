@@ -107,6 +107,9 @@ class MacroscaleProblem2D:
             macroscale_problem_parameters, "output directory path", str, required=False,
             default_value=os.path.join(os.getcwd(), "output")
             )
+        if not os.path.exists(self.__output_directory_path):
+            os.mkdir(self.__output_directory_path)
+
         self.__macroscale_vtk_file_output = os.path.join(self.__output_directory_path, "macroscale_VTK_files")
         if not os.path.exists(self.__macroscale_vtk_file_output):
             os.mkdir(self.__macroscale_vtk_file_output)

@@ -133,6 +133,9 @@ class RepresentativeVolumeElement2D:
         self.__enable_matplotlib_output = utils.get_parameter_or_default(
             representative_volume_element_parameters, "enable matplotlib output", bool, required=False,
             default_value=True)
+
+        if not os.path.exists(self.__output_directory_path):
+            os.mkdir(self.__output_directory_path)
         
         self.__rve_vtk_file_output = os.path.join(self.__output_directory_path, "material_VTK_files")
         if not os.path.exists(self.__rve_vtk_file_output):
