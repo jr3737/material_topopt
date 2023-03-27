@@ -136,11 +136,11 @@ class RepresentativeVolumeElement2D:
 
         if not os.path.exists(self.__output_directory_path):
             os.mkdir(self.__output_directory_path)
-        
+
         self.__rve_vtk_file_output = os.path.join(self.__output_directory_path, "material_VTK_files")
         if not os.path.exists(self.__rve_vtk_file_output):
             os.mkdir(self.__rve_vtk_file_output)
-        
+
         self.__rve_matplotlib_file_output = os.path.join(self.__output_directory_path, "material_image_files")
         if not os.path.exists(self.__rve_matplotlib_file_output):
             os.mkdir(self.__rve_matplotlib_file_output)
@@ -496,8 +496,8 @@ class RepresentativeVolumeElement2D:
                 self.__matplotlib_triangulation = mpl.tri.Triangulation(np.concatenate(x_coords),
                                                                         np.concatenate(y_coords),
                                                                         triangles=np.concatenate(elem_connect, axis=0))
-            matplotlib_figure_output_filepath = \
-                os.path.join(self.__rve_matplotlib_file_output, f"material.{self.__optimization_iteration_number:04d}.png")
+            matplotlib_figure_output_filepath = os.path.join(self.__rve_matplotlib_file_output,
+                                                        f"material.{self.__optimization_iteration_number:04d}.png")
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
             number_of_contour_levels = 32
