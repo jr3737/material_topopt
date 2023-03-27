@@ -11,10 +11,11 @@ First, install the [Anaconda](https://www.anaconda.com/products/distribution) or
 conda create --name material_topopt -y
 conda activate material_topopt
 conda install python=3.10 -y
-conda install numpy scipy matplotlib pandas pytest pytest-cov sphinx -y
-conda install -c conda-forge meshio pypardiso -y
+conda install numpy scipy matplotlib pandas pytest pytest-cov sphinx spyder -y
+conda install -c conda-forge meshio pypardiso shapely trimesh -y
 conda update --all -y
 conda clean -a -y
+pip install triangle
 ```
 
 Then, if you are on a Linux/Mac system with `git` installed, clone this repository,
