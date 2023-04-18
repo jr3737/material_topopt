@@ -9,10 +9,10 @@ import src.material_topopt.utilities as utils
 #######################################################################################################################
 #######################################################################################################################
 def test_user_parameter_parsing_correct():
+    shutil.rmtree('output')
     logging_level = logging.ERROR
     relative_logfile_path = os.path.join('output', 'logfile.txt')
     utils.setup_logging(logging_level, logfile_path=relative_logfile_path)
-    shutil.rmtree('output')
 
     user_parameters = \
         {
