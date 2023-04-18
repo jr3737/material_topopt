@@ -899,7 +899,8 @@ class RepresentativeVolumeElement2D:
             #
             interior_node_x_coordinates = self.__nodal_coordinates[self.__interior_node_indices, 0].ravel()
             interior_node_y_coordinates = self.__nodal_coordinates[self.__interior_node_indices, 1].ravel()
-            ax.plot(interior_node_x_coordinates, interior_node_y_coordinates, 'bo', label='interior nodes')
+            if interior_node_x_coordinates.size < 101:
+                ax.plot(interior_node_x_coordinates, interior_node_y_coordinates, 'bo', label='interior nodes')
             #
             corner_node_x_coordinates = self.__nodal_coordinates[self.__corner_node_indices, 0].ravel()
             corner_node_y_coordinates = self.__nodal_coordinates[self.__corner_node_indices, 1].ravel()

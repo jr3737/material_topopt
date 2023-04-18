@@ -124,14 +124,14 @@ representative_volume_element_parameters = \
         "enable matplotlib output": True
     }
 
-# Paperclip
-fixed_boundary_nodesets = {"Fixed X Displacement Nodesets": ["fixed_nodeset"],
-                           "Fixed Y Displacement Nodesets": ["fixed_nodeset"]}
-applied_load_1 = {"Nodeset": "load_nodeset", "Load in X direction": 0.2, "Load in Y direction": 0.0}
+# Letter G
+fixed_boundary_nodesets = {"Fixed X Displacement Nodesets": ["G_start_nodeset"],
+                           "Fixed Y Displacement Nodesets": ["G_start_nodeset"]}
+applied_load_1 = {"Nodeset": "G_finish_nodeset", "Load in X direction": 1.0, "Load in Y direction": 0.0}
 applied_loads = [applied_load_1]
 macroscale_problem_parameters = \
     {
-        "macroscale finite element mesh filepath": os.path.join(os.getcwd(), "mesh_files", "paperclip.inp"),
+        "macroscale finite element mesh filepath": "tools/letterG.inp",
         "fixed boundary condition nodesets": fixed_boundary_nodesets,
         "applied loads": applied_loads,
         "output directory path": output_directory_path
