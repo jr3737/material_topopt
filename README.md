@@ -6,23 +6,17 @@
 This code performs material topology optimization of a globally periodic, linear-elastic, bi-material microstructure in order to maximize the stiffness (i.e., minimize the compliance) of a user-specified macroscopic structure subject to user-specified loading. Only 3-node triangular finite elements are implemented for simplicity. The finite element mesh of the macroscopic structure must be supplied in a format that is readable by [meshio](https://github.com/nschloe/meshio), in addition to nodesets (i.e., point sets in [meshio](https://github.com/nschloe/meshio)'s terminology) where boundary conditions will be specified.
 
 ## Installation
-First, install the [Anaconda](https://www.anaconda.com/products/distribution) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links) python package manager.
+Install the [Anaconda](https://www.anaconda.com/products/distribution) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html#latest-miniconda-installer-links) python package manager. Opening the `Anaconda Powershell Prompt` on Windows or the `Terminal` on Mac, navigate to the directory with the code in it. Then, using the `environments.yml` file, install the new conda environment.
 ```bash
-conda create --name material_topopt -y
-conda activate material_topopt
-conda install python=3.10 -y
-conda install numpy scipy matplotlib pandas pytest pytest-cov sphinx spyder -y
-conda install -c conda-forge meshio pypardiso shapely trimesh -y
-conda update --all -y
-conda clean -a -y
-pip install triangle
+cd /path/to/material_topopt
+conda env create --file environment.yml
 ```
 
-Then, if you are on a Linux/Mac system with `git` installed, clone this repository,
+To download this code, if you are on a Linux/Mac system with `git` installed, clone this repository,
 ```bash
 git clone https://github.com/jr3737/material_topopt.git
 ```
-otherwise, download the source as a zip file and unzip the contents.
+otherwise, download the source as a zip file and unzip the contents into a folder on your computer.
 
 ## Documentation
 After cloning this repository, `cd` into the `docs` subdirectory and build the documentation like,
